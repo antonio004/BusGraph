@@ -16,11 +16,19 @@ graph = {
         'Bosque' : {
             'name': 'Bosque',
             'pounds': [10,20,30]
+        },
+	'AugustoMontenegro' : {
+            'name' : 'Augusto Montenegro',
+            'pounds' : [10,20,30]
         }
     },
     'PA_Cabral' : {
         'Dr_Freitas' : {
             'name' : 'Dr. Freitas',
+            'pounds' : [10,20,30]
+        },
+	'AugustoMontenegro' : {
+            'name' : 'Augusto Montenegro',
             'pounds' : [10,20,30]
         }
     },
@@ -36,6 +44,10 @@ graph = {
         'AntonioBaena' : {
             'name' : "Antônio Baena",
             'pounds' : [10,20,30]
+        },
+	'Entroncamento' : {
+            'name' : 'Entroncamento',
+            'pounds' : [10,20,30] #Morning, afternoon and night
         }
     },
     'Dr_Freitas' : {
@@ -161,8 +173,11 @@ def route(startPoint, endPoint, shift):
 def calcRoute(startPoint, endPoint, route, shift):
     if(validPoints(startPoint, endPoint, route)):
         (start,end) = getIndexInitStop(startPoint, endPoint, route)
-        route = route[start:end+1] #slicing just part that contains bus route
-        #print(route)
+	if(start>end):
+		route = list(reversed(route))
+		route = route[end:start+1]
+	else:
+		route = route[start:end+1] #slicing just part that contains bus route
         #defining shift, works as a switch/case 
         poundIndex = {
             'morning': 0,
@@ -172,8 +187,9 @@ def calcRoute(startPoint, endPoint, route, shift):
 
         #Sum all route pounds
         pound = 0
-        for i in range(0,len(route)-1):
-            pound += graph[route[i]][route[i+1]]['pounds'][poundIndex]
+        for i in route:
+	    if(route.index(i)!=(len(route)-1)):
+            	pound += graph[i][route[route.index(i)+1]]['pounds'][poundIndex]
         return pound,route
     else:
         pound = -1
@@ -181,4 +197,4 @@ def calcRoute(startPoint, endPoint, route, shift):
 
 #print(calcRoute('AugustoMontenegro', 'UFPA', icoaraci, 'afternoon'))
 
-print(route('AugustoMontenegro','UFPA','afternoon'))
+print(route('UFPA','PA_Cabral','morning'))
